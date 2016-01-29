@@ -93,11 +93,17 @@
                 android:src="@drawable/sign_first"
                 android:layout_gravity="center_horizontal"
                 android:transitionName="LoginButtom"/>
-
-            <com.facebook.login.widget.LoginButton
-                android:id="@+id/login_button"
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:paddingRight="50dp"
                 android:paddingLeft="50dp"
+                android:id="@+id/inscButton"
+                android:src="@drawable/signup_first"
+                android:layout_gravity="center_horizontal"
+                android:transitionName="InscButtom"/>
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"

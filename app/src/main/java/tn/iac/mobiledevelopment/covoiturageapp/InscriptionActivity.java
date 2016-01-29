@@ -1,28 +1,27 @@
 package tn.iac.mobiledevelopment.covoiturageapp;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class InscriptionActivity extends AppCompatActivity {
-    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
+    protected static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
     private Pattern pattern = Pattern.compile(EMAIL_PATTERN);
     private Matcher matcher;
-    protected TextInputLayout firstName = null ;
-    protected TextInputLayout lastName = null ;
-    protected TextInputLayout email = null ;
-    protected TextInputLayout emailConfirmed = null ;
-    protected TextInputLayout password = null ;
-    protected TextInputLayout passwordConfirmed = null ;
-    protected ImageView inscrptionButton= null;
+    protected TextInputLayout firstName = null;
+    protected TextInputLayout lastName = null;
+    protected TextInputLayout email = null;
+    protected TextInputLayout emailConfirmed = null;
+    protected TextInputLayout password = null;
+    protected TextInputLayout passwordConfirmed = null;
+    protected ImageView inscrptionButton = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,7 @@ public class InscriptionActivity extends AppCompatActivity {
         emailConfirmed = (TextInputLayout) findViewById(R.id.layoutEmailConfirmed);
         password = (TextInputLayout) findViewById(R.id.layoutPassword);
         passwordConfirmed = (TextInputLayout) findViewById(R.id.layoutPasswordConfirmed);
-        inscrptionButton = (ImageView)findViewById(R.id.inscrptionButton);
+        inscrptionButton = (ImageView) findViewById(R.id.inscrptionButton);
 
         inscrptionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,17 +94,17 @@ public class InscriptionActivity extends AppCompatActivity {
         });
     }
 
-
     public boolean validateEmail(String email) {
         matcher = pattern.matcher(email);
         return matcher.matches();
     }
+
     public boolean validatePassword(String password) {
-        return password.length()>6;
+        return password.length() > 6;
     }
 
     public boolean validateInput(String input) {
-        return input.length()>3;
+        return input.length() > 3;
     }
 
     private void hideKeyboard() {
@@ -115,8 +114,8 @@ public class InscriptionActivity extends AppCompatActivity {
                     hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
-    
-    private void doInscri(){
+
+    private void doInscri() {
         Toast.makeText(getBaseContext(), "hi bb", Toast.LENGTH_LONG).show();
     }
 

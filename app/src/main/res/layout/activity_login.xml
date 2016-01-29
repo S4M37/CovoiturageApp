@@ -1,0 +1,151 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFF"
+    android:theme="@style/Pagelog"
+    tools:context=".First">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:id="@+id/logo"
+            android:src="@drawable/logo"
+            android:paddingRight="70dp"
+            android:paddingLeft="70dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:paddingRight="50dp"
+            android:paddingLeft="50dp"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:id="@+id/inputs_id"
+            android:layout_below="@id/logo">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layoutLoginEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:id="@+id/loginemail"
+                    android:layout_centerHorizontal="true"
+                    android:hint="Votre Email" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layoutLoginePassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/loginpass"
+                    android:inputType="textPassword"
+                    android:ems="10"
+                    android:hint="Votre mot de passe" />
+            </android.support.design.widget.TextInputLayout>
+            <CheckBox
+                android:paddingRight="50dp"
+                android:paddingLeft="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Rester connecté"
+                android:id="@+id/checkBox"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:id="@+id/buttlogin"
+            android:layout_below="@id/inputs_id">
+
+
+            <ImageView
+                android:paddingRight="50dp"
+                android:paddingLeft="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/loginButton"
+                android:src="@drawable/sign_first"
+                android:layout_gravity="center_horizontal"
+                android:transitionName="LoginButtom"/>
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button"
+                android:paddingRight="50dp"
+                android:paddingLeft="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:id="@+id/animation"
+            android:layout_below="@id/inputs_id">
+            <ProgressBar
+                android:id="@+id/progressBarLogin"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:indeterminate="true"
+                android:elevation="3dp"
+                android:indeterminateTintMode="src_atop"
+                android:indeterminateTint="#44becb"
+                android:layout_gravity="center_horizontal" >
+            </ProgressBar>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:id="@+id/state"
+            android:layout_below="@id/inputs_id">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/yes"
+                android:src="@drawable/yes"/>
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/no"
+                android:src="@drawable/no"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</FrameLayout>

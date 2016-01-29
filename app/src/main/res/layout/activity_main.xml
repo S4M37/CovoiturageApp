@@ -1,0 +1,77 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:theme="@style/ThemeOverlay.AppCompat.Light"
+    android:background="#FFF"
+    tools:context=".First">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+
+   >
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:id="@+id/logo"
+        android:src="@drawable/logo"
+        android:paddingRight="70dp"
+        android:paddingLeft="70dp"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:typeface="sans"
+            android:textColor="#717171"
+            android:textSize="50dp"
+            android:text="@string/app_name"
+            android:layout_marginBottom="50dp"
+            />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/inscButton"
+            android:src="@drawable/signup_first"
+            android:layout_gravity="center_horizontal"
+            android:transitionName="InscButtom"/>
+
+        <ImageView
+            android:transitionName="LoginButtom"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/cnxButton"
+            android:src="@drawable/sign_first"
+            android:layout_gravity="center_horizontal" />
+
+
+        <ProgressBar
+            android:id="@+id/mainProgressBar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:indeterminate="true"
+            android:elevation="3dp"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="#44becb"
+            android:layout_gravity="center_horizontal" >
+        </ProgressBar>
+
+    </LinearLayout>
+
+</RelativeLayout>
+
+
+</FrameLayout>

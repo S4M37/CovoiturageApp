@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#FFF"
     android:theme="@style/Pagelog"
-    tools:context=".First">
+    tools:context=".connectivity.LoginActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -78,36 +78,32 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingRight="50dp"
+            android:paddingLeft="50dp"
             android:layout_centerHorizontal="true"
             android:orientation="vertical"
             android:id="@+id/buttlogin"
             android:layout_below="@id/inputs_id">
-
-
             <ImageView
-                android:paddingRight="50dp"
-                android:paddingLeft="50dp"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/loginButton"
                 android:src="@drawable/sign_first"
                 android:layout_gravity="center_horizontal"
                 android:transitionName="LoginButtom"/>
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingRight="50dp"
-                android:paddingLeft="50dp"
-                android:id="@+id/inscButton"
-                android:src="@drawable/signup_first"
-                android:layout_gravity="center_horizontal"
-                android:transitionName="InscButtom"/>
             <com.facebook.login.widget.LoginButton
                 android:id="@+id/login_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"/>
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="visible"
+                tools:visibility="gone" />
 
         </LinearLayout>
         <LinearLayout
@@ -118,15 +114,16 @@
             android:id="@+id/animation"
             android:layout_below="@id/inputs_id">
             <ProgressBar
-                android:id="@+id/progressBarLogin"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:id="@+id/ProgressBar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:indeterminate="true"
                 android:elevation="3dp"
                 android:indeterminateTintMode="src_atop"
                 android:indeterminateTint="#44becb"
                 android:layout_gravity="center_horizontal" >
             </ProgressBar>
+
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

@@ -51,29 +51,28 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
 
         recyclerView = (RecyclerView) layout.findViewById(R.id.recyview);
-        adapter = new RecylerViewAdapter(getActivity(), getData());
+        adapter = new RecylerViewAdapter(getActivity(),getData());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         // Inflate the layout for this fragment
         return layout;
     }
 
-    public static List<RecylerViewInformation> getData() {
+    public static List<RecylerViewInformation> getData(){
         List<RecylerViewInformation> data = new ArrayList<>();
-        int[] icons = {R.drawable.ic_person_outline_black_24dp, R.drawable.ic_search_black_24dp, R.drawable.ic_directions_car_black_24dp, R.drawable.ic_help_outline_black_24dp, R.drawable.ic_settings_black_24dp, R.drawable.ic_exit_to_app_black_24dp};
-        String[] titles = {"Mon compte ", "Rechercher un trajet ", "Proposer un trajet", "Aide", "Paramétre", "Déconnexion"};
-        for (int i = 0; i < titles.length; i++) {
+        int[] icons={R.drawable.ic_person_outline_black_24dp,R.drawable.ic_search_black_24dp,R.drawable.ic_directions_car_black_24dp,R.drawable.ic_help_outline_black_24dp,R.drawable.ic_settings_black_24dp,R.drawable.ic_exit_to_app_black_24dp};
+        String[] titles = {"Mon compte ", "Rechercher un trajet " , "Proposer un trajet", "Aide","Paramétre", "Déconnexion"};
+        for (int i =0;i<titles.length;i++) {
             RecylerViewInformation current = new RecylerViewInformation();
-            current.iconId = icons[i];
-            current.title = titles[i];
+            current.iconId=icons[i];
+            current.title=titles[i];
             data.add(current);
         }
         return data;
     }
-
     public void setUp(int fragmentid, DrawerLayout drawerlayout, final Toolbar toolbar) {
         containerView = getActivity().findViewById(fragmentid);
         mDrawerLayout = drawerlayout;
@@ -99,13 +98,6 @@ public class NavigationDrawerFragment extends Fragment {
             }
 
 
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, slideOffset);
-                ((MainActivity) getActivity()).onDrawerSlide(slideOffset);
-                toolbar.setAlpha(1 - slideOffset / 2);
-
-            }
 
 
         };

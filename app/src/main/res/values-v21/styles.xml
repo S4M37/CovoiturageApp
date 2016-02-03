@@ -1,19 +1,67 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Base application theme. -->
     <style name="AppTheme" parent="AppTheme.Base">
-        <item name="android:colorPrimary">@color/colorPrimary</item>
-        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:windowTranslucentStatus">true</item>
-
+        <!-- Customize your theme here. -->
     </style>
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/colorHighlight</item>
+        <item name="android:windowTranslucentStatus">true</item>
 
 
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
 
+    </style>
+
+    <style name="ToolBarStyle" parent="@style/ThemeOverlay.AppCompat.Dark">
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+    </style>
+
+    <style name="Loginstyle" parent="@style/ThemeOverlay.AppCompat.Light" >
+        <item name="android:textColorSecondaryInverse">@color/colorHighlight</item>
+
+    </style>
+
+    <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:typeface">serif</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="FirstPageStyle" parent="@style/FullscreenTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+
+    </style>
+
+    <style name="ErrorText" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textColor">@color/black_overlay</item>
+    </style>
+    <style name="AutoCompleteTextViewLight" parent="@android:style/Widget.AutoCompleteTextView">
+        <item name="android:textColor">@color/colorHighlight</item>
+    </style>
+    <style name="Widget.DropDownItemLight" parent="@android:style/Widget.DropDownItem">
+        <item name="android:textColor">@color/colorHighlight</item>
+    </style>
+    <style name="Theme.Holo.Light.Workaround" parent="@android:style/Theme.Holo.Light">
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewLight</item>
+        <item name="android:dropDownItemStyle">@style/Widget.DropDownItemLight</item>
+    </style>
+
+    <style name="Pagelog" parent="@style/Theme.Holo.Light.Workaround">
+        <item name="colorAccent">@color/colorPrimary</item>
     </style>
 </resources>

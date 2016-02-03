@@ -1,4 +1,4 @@
-package tn.iac.mobiledevelopment.covoiturageapp;
+package tn.iac.mobiledevelopment.covoiturageapp.utils;
 
 import android.content.Context;
 import android.graphics.Typeface;

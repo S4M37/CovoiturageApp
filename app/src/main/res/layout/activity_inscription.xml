@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:theme="@style/Theme.Holo.Light.Workaround"
     android:background="#FFF"
-    tools:context=".First">
+    tools:context=".connectivity.First">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/emailConfirmed"
                     android:layout_centerHorizontal="true"
-                    android:hint="Répéter votre Email" />
+                    android:hint="confirmez votre Email" />
             </android.support.design.widget.TextInputLayout>
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/layoutPassword"
@@ -122,7 +122,7 @@
                     android:id="@+id/passwrodConfirmed"
                     android:inputType="textPassword"
                     android:ems="10"
-                    android:hint="Répéter votre mot de passe" />
+                    android:hint="confirmez votre mot de passe" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -131,17 +131,30 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:orientation="vertical"
-            android:layout_below="@id/inputs_id">
+            android:layout_below="@id/inputs_id"
+            android:paddingRight="50dp"
+            android:paddingLeft="50dp">
 
             <ImageView
-                android:paddingRight="50dp"
-                android:paddingLeft="50dp"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/inscrptionButton"
                 android:src="@drawable/signup_first"
                 android:layout_gravity="center_horizontal"
                 android:transitionName="InscButtom"/>
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"/>
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="visible"
+                tools:visibility="gone" />
 
 
         </LinearLayout>

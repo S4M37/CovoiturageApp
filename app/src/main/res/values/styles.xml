@@ -4,7 +4,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/colorHighlight</item>
@@ -40,8 +40,7 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
-    <style name="FirstPageStyle" parent="@style/FullscreenTheme">
-    </style>
+    <style name="FirstPageStyle" parent="@style/FullscreenTheme"></style>
 
     <style name="ErrorText" parent="TextAppearance.AppCompat.Small">
         <item name="android:textStyle">bold|italic</item>

@@ -1,4 +1,4 @@
-package tn.iac.mobiledevelopment.covoiturageapp.connectivity;
+package tn.iac.mobiledevelopment.covoiturageapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -47,9 +47,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedInput;
 import tn.iac.mobiledevelopment.covoiturageapp.R;
-import tn.iac.mobiledevelopment.covoiturageapp.connectivity.model.User;
-import tn.iac.mobiledevelopment.covoiturageapp.home.MainActivity;
-import tn.iac.mobiledevelopment.covoiturageapp.restApi.GithubService;
+import tn.iac.mobiledevelopment.covoiturageapp.models.User;
+import tn.iac.mobiledevelopment.covoiturageapp.network.GithubService;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.AuthUtils;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.remplaceFont;
 

@@ -1,4 +1,4 @@
-package tn.iac.mobiledevelopment.covoiturageapp;
+package tn.iac.mobiledevelopment.covoiturageapp.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,10 +12,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import tn.iac.mobiledevelopment.covoiturageapp.R;
+import tn.iac.mobiledevelopment.covoiturageapp.views.adapters.RecylerViewAdapter;
+import tn.iac.mobiledevelopment.covoiturageapp.models.RecylerViewInformation;
 
 
 public class NavigationDrawerFragment extends Fragment {
@@ -67,8 +70,8 @@ public class NavigationDrawerFragment extends Fragment {
         String[] titles = {"Mon compte ", "Rechercher un trajet " , "Proposer un trajet", "Aide","Paramétre", "Déconnexion"};
         for (int i =0;i<titles.length;i++) {
             RecylerViewInformation current = new RecylerViewInformation();
-            current.iconId=icons[i];
-            current.title=titles[i];
+            current.setIconId(icons[i]);
+            current.setTitle(titles[i]);
             data.add(current);
         }
         return data;

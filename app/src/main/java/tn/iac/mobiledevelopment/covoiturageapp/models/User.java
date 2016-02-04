@@ -1,4 +1,4 @@
-package tn.iac.mobiledevelopment.covoiturageapp.connectivity.model;
+package tn.iac.mobiledevelopment.covoiturageapp.models;
 
 import java.io.Serializable;
 

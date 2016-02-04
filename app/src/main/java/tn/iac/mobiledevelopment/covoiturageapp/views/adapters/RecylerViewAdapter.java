@@ -1,4 +1,4 @@
-package tn.iac.mobiledevelopment.covoiturageapp;
+package tn.iac.mobiledevelopment.covoiturageapp.views.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,10 @@ import android.widget.TextView;
 
 import java.util.Collections;
 import java.util.List;
+
+import tn.iac.mobiledevelopment.covoiturageapp.activities.Parametre;
+import tn.iac.mobiledevelopment.covoiturageapp.R;
+import tn.iac.mobiledevelopment.covoiturageapp.models.RecylerViewInformation;
 
 /**
  * Created by kalou on 15/01/2016.
@@ -42,8 +46,8 @@ public class RecylerViewAdapter extends RecyclerView.Adapter<RecylerViewAdapter.
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         RecylerViewInformation current = data.get(position);
-        holder.title.setText(current.title);
-        holder.icon.setImageResource(current.iconId);
+        holder.title.setText(current.getTitle());
+        holder.icon.setImageResource(current.getIconId());
     }
 
     @Override

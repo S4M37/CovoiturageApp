@@ -1,4 +1,4 @@
-package tn.iac.mobiledevelopment.covoiturageapp.home;
+package tn.iac.mobiledevelopment.covoiturageapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,18 +13,11 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 
-import tn.iac.mobiledevelopment.covoiturageapp.Parametre;
 import tn.iac.mobiledevelopment.covoiturageapp.R;
-import tn.iac.mobiledevelopment.covoiturageapp.connectivity.LoginActivity;
-import tn.iac.mobiledevelopment.covoiturageapp.connectivity.model.User;
+import tn.iac.mobiledevelopment.covoiturageapp.models.User;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.AuthUtils;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.remplaceFont;
 

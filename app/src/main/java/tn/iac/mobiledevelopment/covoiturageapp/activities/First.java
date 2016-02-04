@@ -1,4 +1,4 @@
-package tn.iac.mobiledevelopment.covoiturageapp.connectivity;
+package tn.iac.mobiledevelopment.covoiturageapp.activities;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -16,8 +16,7 @@ import android.widget.ImageView;
 import com.google.gson.Gson;
 
 import tn.iac.mobiledevelopment.covoiturageapp.R;
-import tn.iac.mobiledevelopment.covoiturageapp.connectivity.model.User;
-import tn.iac.mobiledevelopment.covoiturageapp.home.MainActivity;
+import tn.iac.mobiledevelopment.covoiturageapp.models.User;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.AuthUtils;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.remplaceFont;
 

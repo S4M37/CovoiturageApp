@@ -1,4 +1,4 @@
-package tn.iac.mobiledevelopment.covoiturageapp.restApi;
+package tn.iac.mobiledevelopment.covoiturageapp.network;
 
 /**
  * Created by S4M37 on 19/01/2016.
@@ -10,7 +10,6 @@ import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.Header;
 import retrofit.http.POST;
-import tn.iac.mobiledevelopment.covoiturageapp.connectivity.model.User;
 
 public interface GithubService {
 

@@ -2,10 +2,9 @@ package tn.iac.mobiledevelopment.covoiturageapp.utils;
 
 import android.content.Context;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 
-import tn.iac.mobiledevelopment.covoiturageapp.connectivity.model.User;
+import tn.iac.mobiledevelopment.covoiturageapp.models.User;
 
 /**
  * Created by S4M37 on 02/02/2016.

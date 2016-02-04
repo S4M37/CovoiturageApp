@@ -1,4 +1,4 @@
-package tn.iac.mobiledevelopment.covoiturageapp;
+package tn.iac.mobiledevelopment.covoiturageapp.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import tn.iac.mobiledevelopment.covoiturageapp.R;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.remplaceFont;
 
 public class Parametre extends AppCompatActivity {

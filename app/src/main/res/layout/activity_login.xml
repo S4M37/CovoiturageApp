@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#FFF"
     android:theme="@style/Pagelog"
-    tools:context=".connectivity.LoginActivity">
+    tools:context=".activities.LoginActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,

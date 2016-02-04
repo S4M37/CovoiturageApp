@@ -1,4 +1,4 @@
-package tn.iac.mobiledevelopment.covoiturageapp.activities;
+package tn.iac.mobiledevelopment.covoiturageapp.activities.connectivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -36,25 +36,24 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedInput;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import tn.iac.mobiledevelopment.covoiturageapp.R;
+import tn.iac.mobiledevelopment.covoiturageapp.activities.MainActivity;
 import tn.iac.mobiledevelopment.covoiturageapp.models.User;
-import tn.iac.mobiledevelopment.covoiturageapp.network.GithubService;
+import tn.iac.mobiledevelopment.covoiturageapp.network.GitHubService;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.AuthUtils;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.remplaceFont;
 
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener {
-    public static final String TAG_USER_ID = "TAG_USER_ID";
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "SignInActivity";
     private static final String[] readPermissions = {"email"};
@@ -68,8 +67,9 @@ public class LoginActivity extends AppCompatActivity implements
     protected AccessToken accessToken = null;
     protected LoginButton loginFacebook = null;
     protected LoginManager loginManager = null;
-    private GoogleApiClient mGoogleApiClient;
-    protected GithubService githubService;
+    protected GoogleApiClient mGoogleApiClient;
+    protected GitHubService gitHubService;
+    protected SignInButton signInButtonGoogle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,10 +87,11 @@ public class LoginActivity extends AppCompatActivity implements
         imageSuccess = (ImageView) findViewById(R.id.yes);
         imageEchec = (ImageView) findViewById(R.id.no);
 
-        githubService = new RestAdapter.Builder()
-                .setEndpoint(GithubService.ENDPOINT)
-                .build()
-                .create(GithubService.class);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(GitHubService.baseUrl)
+                .build();
+
+        gitHubService = retrofit.create(GitHubService.class);
 
         if (Build.VERSION.SDK_INT >= 21) {
             //   getWindow().setEnterTransition(TransitionInflater.from(Login.this).inflateTransition(R.transition.shared_element_a));
@@ -121,44 +122,20 @@ public class LoginActivity extends AppCompatActivity implements
                     emailInput.setError("Email non valide !");
                     emailInput.requestFocus();
                     passwordInput.setErrorEnabled(false);
-
+                    hideButton();
+                    mdperreur();
                 } else if (!validatePassword(passtext)) {
                     passwordInput.setError("Mot de passe non valide !");
                     passwordInput.requestFocus();
                     emailInput.setErrorEnabled(false);
                     emailInput.getEditText().setHintTextColor(getResources().getColor(R.color.colorPrimary));
+                    hideButton();
+                    mdperreur();
                 } else {
                     emailInput.setErrorEnabled(false);
                     passwordInput.setErrorEnabled(false);
                     hideKeyboard();
-                    signin(emailtext, passtext, new Callback<String>() {
-                        @Override
-                        public void success(String s, Response response) {
-                            JSONObject jsonObject = null;
-                            String token = null;
-                            User user = null;
-                            try {
-                                jsonObject = new JSONObject(s);
-                                token = jsonObject.getString("token");
-                                JSONObject userJson = jsonObject.getJSONArray("user").getJSONObject(0);
-                                user = new User("", userJson.getString("login"), userJson.getString("nom") + " " + userJson.getString("prenom"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                            AuthUtils.saveToken(LoginActivity.this, token);
-                            AuthUtils.saveUser(LoginActivity.this, user);
-                            Log.d("success", "last one");
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                            startActivity(intent);
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Toast.makeText(LoginActivity.this, "Unable to conenect", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    signin(emailtext, passtext);
                 }
 
             }
@@ -170,13 +147,17 @@ public class LoginActivity extends AppCompatActivity implements
         loginFacebook = (LoginButton) findViewById(R.id.login_button);
         loginManager = LoginManager.getInstance();
         loginFacebook.setReadPermissions(readPermissions);
-
+        loginFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideButton();
+            }
+        });
         loginFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 accessToken = AccessToken.getCurrentAccessToken();
                 //Log.d("user facebook",loginResult.toString());
-
                 GraphRequest request = GraphRequest.newMeRequest(
                         loginResult.getAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
@@ -190,9 +171,7 @@ public class LoginActivity extends AppCompatActivity implements
                                     User user = new User(object.get("id").toString(), object.get("email").toString(), object.get("name").toString());
                                     //Toast.makeText(LoginActivity.this,user.toString(),Toast.LENGTH_SHORT).show();
                                     AuthUtils.saveUser(LoginActivity.this, user);
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    intent.putExtra("user", user);
-                                    startActivity(intent);
+                                    succ();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -202,21 +181,17 @@ public class LoginActivity extends AppCompatActivity implements
                 parameters.putString("fields", "id,name,email");
                 request.setParameters(parameters);
                 request.executeAsync();
-
-                //User user=new (accessToken.getUserId(),loginResult);
-                ///Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-
-                //startActivity(intent);
             }
 
             @Override
             public void onCancel() {
-                Toast.makeText(getBaseContext(), "cancel", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "cancel", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(getBaseContext(), "error", Toast.LENGTH_LONG).show();
+                mdperreur();
+                Toast.makeText(getBaseContext(), "error,retry again", Toast.LENGTH_SHORT).show();
                 error.printStackTrace();
             }
         });
@@ -237,13 +212,15 @@ public class LoginActivity extends AppCompatActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        SignInButton signInButtonGoogle = (SignInButton) findViewById(R.id.sign_in_button);
+        signInButtonGoogle = (SignInButton) findViewById(R.id.sign_in_button);
         signInButtonGoogle.setSize(SignInButton.SIZE_STANDARD);
         signInButtonGoogle.setScopes(gso.getScopeArray());
 
         signInButtonGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+                hideButton();
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
             }
@@ -276,107 +253,90 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
-    private void signin(String login, String password, final Callback<String> cb) {
-        /*AnimationSet animationSet = new AnimationSet(getBaseContext(), null);
-        animationSet.addAnimation(new AlphaAnimation(1f, 0f));
-        animationSet.addAnimation(new TranslateAnimation(0, 0, 0, 700));
-        animationSet.setDuration(750);
-
-        animationSet.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                loginButton.setVisibility(View.GONE);
-                loginFacebook.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-        loginButton.startAnimation(animationSet);
-        loginFacebook.startAnimation(animationSet);
-
-*/
+    private void signin(String login, String password) {
+        hideButton();
         progressBar.setVisibility(View.VISIBLE);
         Log.d("connect", login + " " + password);
         //github sign in
-        githubService.signin(login, password, new Callback<Response>() {
+        Call<ResponseBody> call = gitHubService.signin(login, password);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void success(Response response, Response response2) {
-
-                TypedInput body = response.getBody();
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                progressBar.setVisibility(View.GONE);
                 Log.d("connect", "second");
+                JSONObject jsonObject = null;
+                String token = null;
+                User user = null;
                 try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(body.in()));
-                    StringBuilder out = new StringBuilder();
-                    String newLine = System.getProperty("line.separator");
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        out.append(line);
-                        out.append(newLine);
+                    ResponseBody body = response.body();
+                    if (body == null) {
+                        emailInput.setError("invalid user email");
+                        passwordInput.setError("invalid user password");
+                        mdperreur();
+                    } else {
+                        jsonObject = new JSONObject(body.string());
+                        token = jsonObject.getString("token");
+                        JSONObject userJson = jsonObject.getJSONArray("user").getJSONObject(0);
+                        user = new User(userJson.getString("id_User"), userJson.getString("login"), userJson.getString("nom") + " " + userJson.getString("prenom"));
+                        succ();
                     }
-                    cb.success(out.toString(), response2);
-
-                } catch (Exception e) {
+                } catch (JSONException | IOException e) {
                     e.printStackTrace();
                 }
+                //Toast.makeText(LoginActivity.this,user.toString(),Toast.LENGTH_SHORT).show();
+                AuthUtils.saveToken(LoginActivity.this, token);
+                AuthUtils.saveUser(LoginActivity.this, user);
+                Log.d("success", "last one");
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                cb.failure(error);
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(LoginActivity.this, "Unable to conenect", Toast.LENGTH_SHORT).show();
+                mdperreur();
             }
         });
-        progressBar.setVisibility(View.GONE);
 
-        //mdperreur();
-
-        //succ();
     }
 
 
     public void mdperreur() {
+        imageEchec.setVisibility(View.VISIBLE);
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        progressBar.setVisibility(View.GONE);
-                        imageEchec.setVisibility(View.VISIBLE);
-                        final TextInputLayout email = (TextInputLayout) findViewById(R.id.layoutLoginEmail);
-                        final TextInputLayout password = (TextInputLayout) findViewById(R.id.layoutLoginePassword);
-                        password.setError("mot de passe erroné");
-                        //loginButton.setVisibility(View.VISIBLE);
-                        //loginFacebook.setVisibility(View.VISIBLE);
-                        //imageEchec.setVisibility(View.GONE);
+                        showButton();
+                        imageEchec.setVisibility(View.GONE);
                     }
                 },
                 2000);
+
     }
 
     public void succ() {
-        final TextInputLayout email = (TextInputLayout) findViewById(R.id.layoutLoginEmail);
-        final TextInputLayout password = (TextInputLayout) findViewById(R.id.layoutLoginePassword);
+        progressBar.setVisibility(View.GONE);
+        imageSuccess.setVisibility(View.VISIBLE);
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        progressBar.setVisibility(View.GONE);
-                        imageSuccess.setVisibility(View.VISIBLE);
-                        password.setErrorEnabled(false);
-                        new android.os.Handler().postDelayed(
-                                new Runnable() {
-                                    public void run() {
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                        startActivity(intent);
-                                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-                                    }
-                                },
-                                500);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                     }
                 },
-                2000);
+                1000);
+    }
+
+    void hideButton() {
+        loginButton.setVisibility(View.GONE);
+        loginFacebook.setVisibility(View.GONE);
+        signInButtonGoogle.setVisibility(View.GONE);
+    }
+
+    void showButton() {
+        loginButton.setVisibility(View.VISIBLE);
+        loginFacebook.setVisibility(View.VISIBLE);
+        signInButtonGoogle.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -385,6 +345,7 @@ public class LoginActivity extends AppCompatActivity implements
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
+
         } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
@@ -396,18 +357,18 @@ public class LoginActivity extends AppCompatActivity implements
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             User user = new User(acct.getId(), acct.getEmail(), acct.getDisplayName());
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putExtra("user", user);
             AuthUtils.saveUser(this, user);
-            startActivity(intent);
+            succ();
         } else {
             // Signed out, show unauthenticated UI.
-            Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show();
+            mdperreur();
         }
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Toast.makeText(this, "failed to connect", Toast.LENGTH_SHORT).show();
+        mdperreur();
     }
 }

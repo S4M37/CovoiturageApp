@@ -1,4 +1,4 @@
-package tn.iac.mobiledevelopment.covoiturageapp.activities;
+package tn.iac.mobiledevelopment.covoiturageapp.activities.connectivity;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.google.gson.Gson;
 
 import tn.iac.mobiledevelopment.covoiturageapp.R;
+import tn.iac.mobiledevelopment.covoiturageapp.activities.MainActivity;
 import tn.iac.mobiledevelopment.covoiturageapp.models.User;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.AuthUtils;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.remplaceFont;
@@ -73,10 +74,9 @@ public class First extends AppCompatActivity {
 
 
         //  check if user authentificated
-        String userJson = AuthUtils.retireiveUser(this);
-        if (!userJson.equals("null")) {
-            Gson gson = new Gson();
-            User user = gson.fromJson(userJson, User.class);
+        Gson gson = new Gson();
+        User user = gson.fromJson(AuthUtils.retireiveUser(this), User.class);
+        if (user != null) {
             Intent intent = new Intent(First.this, MainActivity.class);
             intent.putExtra("user", user);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

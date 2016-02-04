@@ -1,4 +1,4 @@
-package tn.iac.mobiledevelopment.covoiturageapp.activities;
+package tn.iac.mobiledevelopment.covoiturageapp.activities.connectivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -35,11 +36,19 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import tn.iac.mobiledevelopment.covoiturageapp.R;
+import tn.iac.mobiledevelopment.covoiturageapp.activities.MainActivity;
 import tn.iac.mobiledevelopment.covoiturageapp.models.User;
+import tn.iac.mobiledevelopment.covoiturageapp.network.GitHubService;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.AuthUtils;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.remplaceFont;
 
@@ -60,11 +69,18 @@ public class InscriptionActivity extends AppCompatActivity implements
     protected TextInputLayout passwordConfirmed = null;
     protected ImageView inscrptionButton = null;
 
+    protected ProgressBar progressBar = null;
+    protected ImageView imageSuccess = null;
+    protected ImageView imageEchec = null;
+
     protected CallbackManager callbackManager = null;
     protected AccessToken accessToken = null;
     protected LoginButton loginFacebook = null;
     protected LoginManager loginManager = null;
-    private GoogleApiClient mGoogleApiClient;
+    protected GoogleApiClient mGoogleApiClient;
+    protected SignInButton signInButtonGoogle;
+
+    protected GitHubService gitHubService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +98,20 @@ public class InscriptionActivity extends AppCompatActivity implements
         password = (TextInputLayout) findViewById(R.id.layoutPassword);
         passwordConfirmed = (TextInputLayout) findViewById(R.id.layoutPasswordConfirmed);
         inscrptionButton = (ImageView) findViewById(R.id.inscrptionButton);
+
+        progressBar = (ProgressBar) findViewById(R.id.ProgressBar);
+        imageSuccess = (ImageView) findViewById(R.id.yes);
+        imageEchec = (ImageView) findViewById(R.id.no);
+
+        progressBar.setVisibility(View.GONE);
+        imageSuccess.setVisibility(View.GONE);
+        imageEchec.setVisibility(View.GONE);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(GitHubService.baseUrl)
+                .build();
+
+        gitHubService = retrofit.create(GitHubService.class);
 
         if (Build.VERSION.SDK_INT >= 21) {
             Slide slide = new Slide();
@@ -116,33 +146,47 @@ public class InscriptionActivity extends AppCompatActivity implements
                 if (!validateInput(firstNameValue)) {
                     firstName.setError("nom non valide !");
                     firstName.requestFocus();
-
+                    hideButton();
+                    mdperreur();
                 } else if (!validateInput(lastNameValue)) {
                     lastName.setError("prénom non valide !");
                     lastName.requestFocus();
+                    mdperreur();
                 } else if (!validateEmail(emailValue)) {
                     email.setError("Email non valide !");
                     email.requestFocus();
+                    hideButton();
+                    mdperreur();
                 } else if (!validateEmail(emailConfirmedValue)) {
                     emailConfirmed.setError("Email non valide !");
                     emailConfirmed.requestFocus();
+                    hideButton();
+                    mdperreur();
                 } else if (!(emailValue.equals(emailConfirmedValue))) {
                     email.setError("Les deux e-mails ne sont pas identiques");
                     emailConfirmed.setError("Les deux e-mails ne sont pas identiques");
                     emailConfirmed.requestFocus();
+                    hideButton();
+                    mdperreur();
                 } else if (!validatePassword(passwordValue)) {
                     password.setError("Mot de passe non valide !");
                     password.requestFocus();
+                    hideButton();
+                    mdperreur();
                 } else if (!validateInput(passwordConfirmedValue)) {
                     passwordConfirmed.setError("Mot de passe non valide !");
                     passwordConfirmed.requestFocus();
+                    hideButton();
+                    mdperreur();
                 } else if (!(passwordValue.equals(passwordConfirmedValue))) {
                     password.setError("Les deux mots de passe ne sont pas identiques");
                     passwordConfirmed.setError("Les deux mots de passe ne sont pas identiques");
                     passwordConfirmed.requestFocus();
+                    hideButton();
+                    mdperreur();
                 } else {
                     hideKeyboard();
-                    doInscri();
+                    doInscri(firstNameValue, lastNameValue, emailValue, passwordValue);
                 }
             }
         });
@@ -153,13 +197,17 @@ public class InscriptionActivity extends AppCompatActivity implements
         loginFacebook = (LoginButton) findViewById(R.id.login_button);
         loginManager = LoginManager.getInstance();
         loginFacebook.setReadPermissions(readPermissions);
-
+        loginFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideButton();
+            }
+        });
         loginFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 accessToken = AccessToken.getCurrentAccessToken();
                 //Log.d("user facebook",loginResult.toString());
-
                 GraphRequest request = GraphRequest.newMeRequest(
                         loginResult.getAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
@@ -167,14 +215,11 @@ public class InscriptionActivity extends AppCompatActivity implements
                             public void onCompleted(
                                     JSONObject object,
                                     GraphResponse response) {
-                                // Application code
                                 Log.v("LoginActivity", response.toString());
                                 try {
                                     User user = new User(object.get("id").toString(), object.get("email").toString(), object.get("name").toString());
-                                    Intent intent = new Intent(InscriptionActivity.this, MainActivity.class);
-                                    intent.putExtra("user", user);
                                     AuthUtils.saveUser(InscriptionActivity.this, user);
-                                    startActivity(intent);
+                                    succ();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -184,21 +229,18 @@ public class InscriptionActivity extends AppCompatActivity implements
                 parameters.putString("fields", "id,name,email");
                 request.setParameters(parameters);
                 request.executeAsync();
-                //User user=new (accessToken.getUserId(),loginResult);
-                ///Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-
-                //startActivity(intent);
             }
 
             @Override
             public void onCancel() {
-                Toast.makeText(getBaseContext(), "cancel", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "cancel", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(getBaseContext(), "error", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "error,retry again", Toast.LENGTH_SHORT).show();
                 error.printStackTrace();
+                mdperreur();
             }
         });
         //google+ login
@@ -218,15 +260,17 @@ public class InscriptionActivity extends AppCompatActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        SignInButton signInButtonGoogle = (SignInButton) findViewById(R.id.sign_in_button);
+        signInButtonGoogle = (SignInButton) findViewById(R.id.sign_in_button);
         signInButtonGoogle.setSize(SignInButton.SIZE_STANDARD);
         signInButtonGoogle.setScopes(gso.getScopeArray());
 
         signInButtonGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
+                hideButton();
             }
         });
     }
@@ -237,7 +281,7 @@ public class InscriptionActivity extends AppCompatActivity implements
     }
 
     public boolean validatePassword(String password) {
-        return password.length() > 6;
+        return password.length() >= 6;
     }
 
     public boolean validateInput(String input) {
@@ -252,9 +296,86 @@ public class InscriptionActivity extends AppCompatActivity implements
         }
     }
 
-    private void doInscri() {
-        Intent intent = new Intent(InscriptionActivity.this, MainActivity.class);
-        startActivity(intent);
+    private void doInscri(String firstNameValue, String lastNameValue, String emailValue, String passwordValue) {
+        hideButton();
+        progressBar.setVisibility(View.VISIBLE);
+        //github sign in
+        Call<ResponseBody> call = gitHubService.storeUser(firstNameValue, lastNameValue, emailValue, passwordValue);
+        Log.d("user", firstNameValue + " " + lastNameValue + " " + emailValue + " " + passwordValue);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                progressBar.setVisibility(View.GONE);
+                JSONObject jsonObject = null;
+                User user = null;
+                try {
+                    jsonObject = new JSONObject(response.body().string());
+                    String result = jsonObject.getString("success");
+                    if (result.equals("User exist")) {
+                        email.setError("User email exist !");
+                        emailConfirmed.getEditText().setText("");
+                        email.requestFocus();
+                        mdperreur();
+                    } else {
+                        JSONObject userJson = jsonObject.getJSONObject("user");
+                        user = new User(userJson.getString("id_User"), userJson.getString("login"), userJson.getString("nom") + " " + userJson.getString("prenom"));
+                        AuthUtils.saveUser(InscriptionActivity.this, user);
+                        succ();
+                    }
+                } catch (JSONException | IOException | NullPointerException e) {
+                    e.printStackTrace();
+                    mdperreur();
+                }
+                //AuthUtils.saveToken(InscriptionActivity.this, token);
+                AuthUtils.saveUser(InscriptionActivity.this, user);
+                Log.d("success", "last one");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(InscriptionActivity.this, "Unable to conenect", Toast.LENGTH_SHORT).show();
+                mdperreur();
+            }
+        });
+    }
+
+    public void mdperreur() {
+        imageEchec.setVisibility(View.VISIBLE);
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        showButton();
+                        imageEchec.setVisibility(View.GONE);
+                    }
+                },
+                2000);
+    }
+
+    public void succ() {
+        progressBar.setVisibility(View.GONE);
+        imageSuccess.setVisibility(View.VISIBLE);
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        Intent intent = new Intent(InscriptionActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                    }
+                },
+                1000);
+    }
+
+    void hideButton() {
+        inscrptionButton.setVisibility(View.GONE);
+        loginFacebook.setVisibility(View.GONE);
+        signInButtonGoogle.setVisibility(View.GONE);
+    }
+
+    void showButton() {
+        inscrptionButton.setVisibility(View.VISIBLE);
+        loginFacebook.setVisibility(View.VISIBLE);
+        signInButtonGoogle.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -263,6 +384,7 @@ public class InscriptionActivity extends AppCompatActivity implements
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
+            succ();
         } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
@@ -274,19 +396,16 @@ public class InscriptionActivity extends AppCompatActivity implements
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             User user = new User(acct.getId(), acct.getEmail(), acct.getDisplayName());
-            Intent intent = new Intent(InscriptionActivity.this, MainActivity.class);
-            intent.putExtra("user", user);
-            AuthUtils.saveUser(InscriptionActivity.this, user);
-            startActivity(intent);
+            AuthUtils.saveUser(this, user);
         } else {
             // Signed out, show unauthenticated UI.
-            Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Toast.makeText(this, "failed to connect", Toast.LENGTH_SHORT).show();
+        mdperreur();
     }
-
 }

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:theme="@style/Theme.Holo.Light.Workaround"
     android:background="#FFF"
-    tools:context=".activities.First">
+    tools:context=".connectivity.First">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -158,7 +158,47 @@
 
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:id="@+id/animation"
+            android:layout_below="@id/inputs_id">
+            <ProgressBar
+                android:id="@+id/ProgressBar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:indeterminate="true"
+                android:elevation="3dp"
+                android:indeterminateTintMode="src_atop"
+                android:indeterminateTint="#44becb"
+                android:layout_gravity="center_horizontal" >
+            </ProgressBar>
 
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:id="@+id/state"
+            android:layout_below="@id/inputs_id">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/yes"
+                android:src="@drawable/yes"/>
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/no"
+                android:src="@drawable/no"/>
+        </LinearLayout>
     </RelativeLayout>
 
 

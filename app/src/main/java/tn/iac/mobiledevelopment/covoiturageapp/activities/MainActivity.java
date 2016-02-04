@@ -15,8 +15,10 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 
 import tn.iac.mobiledevelopment.covoiturageapp.R;
+import tn.iac.mobiledevelopment.covoiturageapp.activities.connectivity.LoginActivity;
 import tn.iac.mobiledevelopment.covoiturageapp.models.User;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.AuthUtils;
 import tn.iac.mobiledevelopment.covoiturageapp.utils.remplaceFont;
@@ -38,6 +40,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected User user;
     protected GoogleApiClient mGoogleApiClient;
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +54,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         //get user
-        user = (User) getIntent().getSerializableExtra("user");
+        Gson gson = new Gson();
+        user = gson.fromJson(AuthUtils.retireiveUser(this), User.class);
         Log.d("user", user.toString());
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
@@ -66,8 +73,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.user);
         roundedImage = new RoundImage(bm);
         imageView1.setImageDrawable(roundedImage);
-
-
 
 
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)
@@ -93,12 +98,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (AccessToken.getCurrentAccessToken() != null) {
                 LoginManager.getInstance().logOut();
             } else if (AuthUtils.retireiveToken(this) != null) {
-                AuthUtils.saveToken(this,null);
-            }else{
-               //google sign out
+                AuthUtils.saveToken(this, null);
+            } else {
+                //google sign out
             }
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             return true;
         }

@@ -1,25 +1,24 @@
 package tn.iac.mobiledevelopment.covoiturageapp.network;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.POST;
+
 /**
  * Created by S4M37 on 19/01/2016.
  */
 
-import retrofit.Callback;
-import retrofit.client.Response;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.Header;
-import retrofit.http.POST;
 
-public interface GithubService {
-
-    public static final String ENDPOINT = "http://192.168.1.9/CovoiturageWebApp/public/";
+public interface GitHubService {
+    public static final String baseUrl = "http://192.168.1.7/CovoiturageWebApp/public/";
 
     @FormUrlEncoded
-    @POST("/user/add")
-    int storeNote(@Header("Authorization") String authorization, @Field("id_Etudiant") String id_Etudiant, @Field("id_Station") int id_Station, @Field("inputs[]") int[] notes) throws RuntimeException;
+    @POST("mobile/signup")
+    Call<ResponseBody> storeUser(@Field("nom") String nom, @Field("prenom") String prenom, @Field("login") String login, @Field("password") String password);
 
     @FormUrlEncoded
-    @POST("/mobile/signin")
-    void signin(@Field("login") String login, @Field("password") String password, Callback<Response> cb);
+    @POST("mobile/signin")
+    Call<ResponseBody> signin(@Field("login") String login, @Field("password") String password);
 }

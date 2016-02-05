@@ -122,14 +122,14 @@ public class LoginActivity extends AppCompatActivity implements
                     emailInput.setError("Email non valide !");
                     emailInput.requestFocus();
                     passwordInput.setErrorEnabled(false);
-                    hideButton();
+                    //hideButton();
                     mdperreur();
                 } else if (!validatePassword(passtext)) {
                     passwordInput.setError("Mot de passe non valide !");
                     passwordInput.requestFocus();
                     emailInput.setErrorEnabled(false);
                     emailInput.getEditText().setHintTextColor(getResources().getColor(R.color.colorPrimary));
-                    hideButton();
+                    //hideButton();
                     mdperreur();
                 } else {
                     emailInput.setErrorEnabled(false);

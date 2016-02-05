@@ -146,7 +146,7 @@ public class InscriptionActivity extends AppCompatActivity implements
                 if (!validateInput(firstNameValue)) {
                     firstName.setError("nom non valide !");
                     firstName.requestFocus();
-                    hideButton();
+                    //hideButton();
                     mdperreur();
                 } else if (!validateInput(lastNameValue)) {
                     lastName.setError("prénom non valide !");
@@ -155,34 +155,34 @@ public class InscriptionActivity extends AppCompatActivity implements
                 } else if (!validateEmail(emailValue)) {
                     email.setError("Email non valide !");
                     email.requestFocus();
-                    hideButton();
+                    //hideButton();
                     mdperreur();
                 } else if (!validateEmail(emailConfirmedValue)) {
                     emailConfirmed.setError("Email non valide !");
                     emailConfirmed.requestFocus();
-                    hideButton();
+                    //hideButton();
                     mdperreur();
                 } else if (!(emailValue.equals(emailConfirmedValue))) {
                     email.setError("Les deux e-mails ne sont pas identiques");
                     emailConfirmed.setError("Les deux e-mails ne sont pas identiques");
                     emailConfirmed.requestFocus();
-                    hideButton();
+                    //hideButton();
                     mdperreur();
                 } else if (!validatePassword(passwordValue)) {
                     password.setError("Mot de passe non valide !");
                     password.requestFocus();
-                    hideButton();
+                    //hideButton();
                     mdperreur();
                 } else if (!validateInput(passwordConfirmedValue)) {
                     passwordConfirmed.setError("Mot de passe non valide !");
                     passwordConfirmed.requestFocus();
-                    hideButton();
+                    //hideButton();
                     mdperreur();
                 } else if (!(passwordValue.equals(passwordConfirmedValue))) {
                     password.setError("Les deux mots de passe ne sont pas identiques");
                     passwordConfirmed.setError("Les deux mots de passe ne sont pas identiques");
                     passwordConfirmed.requestFocus();
-                    hideButton();
+                    //hideButton();
                     mdperreur();
                 } else {
                     hideKeyboard();
